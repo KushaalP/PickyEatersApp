@@ -1,0 +1,17 @@
+export default {
+  background: '#121212',
+  surface: '#1E1E1E',
+  card: '#252525',
+  primary: '#8B0000',
+  primaryLight: '#A52A2A',
+  primaryDark: '#5C0000',
+  text: '#FFFFFF',
+  textSecondary: '#B3B3B3',
+  textTertiary: '#808080',
+  border: '#333333',
+  success: '#4CAF50',
+  warning: '#FFA726',
+  error: '#EF5350',
+  tabBarActive: '#8B0000',
+  tabBarInactive: '#666666',
+};
