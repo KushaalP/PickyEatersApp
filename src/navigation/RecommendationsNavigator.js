@@ -5,6 +5,7 @@ import Colors from '../constants/Colors';
 import RecommendationsScreen from '../screens/RecommendationsScreen';
 import SoloRecommendationsScreen from '../screens/RecScreens/SoloRecommendationsScreen';
 import GroupRecommendationsScreen from '../screens/RecScreens/GroupRecommendationsScreen';
+import RestaurantSearchScreen from '../screens/RecScreens/RestaurantSearchScreen';
 
 const Stack = createStackNavigator();
 
@@ -27,6 +28,10 @@ export default function RecommendationsNavigator() {
       <Stack.Screen 
         name="GroupRecommendations" 
         component={GroupRecommendationsScreen}
+      />
+      <Stack.Screen 
+        name="RestaurantSearch" 
+        component={RestaurantSearchScreen}
       />
     </Stack.Navigator>
   );

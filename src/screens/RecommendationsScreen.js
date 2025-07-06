@@ -14,11 +14,11 @@ export default function RecommendationsScreen() {
   const navigation = useNavigation();
 
   const handleSoloPress = () => {
-    navigation.navigate('SoloRecommendations');
+    navigation.navigate('RestaurantSearch', { source: 'solo' });
   };
 
   const handleGroupPress = () => {
-    navigation.navigate('GroupRecommendations');
+    navigation.navigate('RestaurantSearch', { source: 'group' });
   };
 
   const RecommendationCard = ({ title, description, icon, iconType, onPress, gradient }) => (
