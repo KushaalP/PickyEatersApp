@@ -1,122 +1,151 @@
-import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, TextInput } from 'react-native';
+import React from 'react';
+import { View, Text, TouchableOpacity, Dimensions, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { globalStyles } from '../styles/globalStyles';
 import Colors from '../constants/Colors';
+import { useNavigation } from '@react-navigation/native';
 
-const RestaurantCard = ({ name, cuisine, rating, distance, priceLevel }) => (
-  <View style={globalStyles.card}>
-    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-      <View style={{ flex: 1 }}>
-        <Text style={{ color: Colors.text, fontSize: 18, fontWeight: 'bold', marginBottom: 4 }}>
-          {name}
-        </Text>
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
-          <MaterialCommunityIcons name="silverware-fork-knife" size={16} color={Colors.primary} />
-          <Text style={{ color: Colors.textSecondary, marginLeft: 6 }}>{cuisine}</Text>
-        </View>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 16 }}>
-            <Ionicons name="star" size={16} color={Colors.warning} />
-            <Text style={{ color: Colors.textSecondary, marginLeft: 4 }}>{rating}</Text>
-          </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 16 }}>
-            <Ionicons name="location" size={16} color={Colors.textSecondary} />
-            <Text style={{ color: Colors.textSecondary, marginLeft: 4 }}>{distance}</Text>
-          </View>
-          <Text style={{ color: Colors.success }}>{'$'.repeat(priceLevel)}</Text>
-        </View>
-      </View>
-      <TouchableOpacity>
-        <Ionicons name="bookmark-outline" size={24} color={Colors.primary} />
-      </TouchableOpacity>
-    </View>
-  </View>
-);
-
-const FilterButton = ({ label, isActive, onPress }) => (
-  <TouchableOpacity 
-    onPress={onPress}
-    style={{
-      paddingHorizontal: 16,
-      paddingVertical: 8,
-      borderRadius: 20,
-      backgroundColor: isActive ? Colors.primary : Colors.surface,
-      borderWidth: 1,
-      borderColor: isActive ? Colors.primary : Colors.border,
-      marginRight: 8,
-    }}
-  >
-    <Text style={{ color: isActive ? Colors.text : Colors.textSecondary, fontWeight: '600' }}>
-      {label}
-    </Text>
-  </TouchableOpacity>
-);
+const { width } = Dimensions.get('window');
+const CARD_WIDTH = width * 0.85;
+const CARD_HEIGHT = 200;
 
 export default function RecommendationsScreen() {
-  const [activeFilter, setActiveFilter] = useState('all');
+  const navigation = useNavigation();
 
-  const recommendations = [
-    { id: 1, name: 'Fusion Kitchen', cuisine: 'Asian Fusion', rating: 4.5, distance: '0.5 mi', priceLevel: 2 },
-    { id: 2, name: 'The Veggie Garden', cuisine: 'Vegetarian', rating: 4.7, distance: '1.2 mi', priceLevel: 2 },
-    { id: 3, name: 'Spice Route', cuisine: 'Indian', rating: 4.3, distance: '0.8 mi', priceLevel: 3 },
-    { id: 4, name: 'Mediterranean Delights', cuisine: 'Mediterranean', rating: 4.6, distance: '2.0 mi', priceLevel: 2 },
-    { id: 5, name: 'The Noodle House', cuisine: 'Thai', rating: 4.4, distance: '1.5 mi', priceLevel: 1 },
-  ];
+  const handleSoloPress = () => {
+    navigation.navigate('RestaurantSearch', { source: 'solo' });
+  };
 
-  const filters = ['All', 'Near Me', 'Top Rated', 'Budget', 'New'];
+  const handleGroupPress = () => {
+    navigation.navigate('RestaurantSearch', { source: 'group' });
+  };
+
+  const RecommendationCard = ({ title, description, icon, iconType, onPress, gradient }) => (
+    <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.8}>
+      <View style={[styles.cardContent, { backgroundColor: gradient }]}>
+        <View style={styles.cardHeader}>
+          <View style={styles.iconContainer}>
+            {iconType === 'ionicons' ? (
+              <Ionicons name={icon} size={50} color={Colors.white} />
+            ) : (
+              <MaterialCommunityIcons name={icon} size={50} color={Colors.white} />
+            )}
+          </View>
+          <View style={styles.arrowContainer}>
+            <Ionicons name="arrow-forward" size={24} color={Colors.white} />
+          </View>
+        </View>
+        <View style={styles.textContainer}>
+          <Text style={styles.cardTitle}>{title}</Text>
+          <Text style={styles.cardDescription} numberOfLines={2}>{description}</Text>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
 
   return (
-    <SafeAreaView style={globalStyles.safeArea} edges={['bottom']}>
-      <ScrollView style={globalStyles.screenContainer}>
-        <View style={{ paddingVertical: 20 }}>
-          <View style={{ 
-            flexDirection: 'row', 
-            alignItems: 'center', 
-            backgroundColor: Colors.surface,
-            borderRadius: 12,
-            paddingHorizontal: 16,
-            marginBottom: 20,
-          }}>
-            <Ionicons name="search" size={20} color={Colors.textSecondary} />
-            <TextInput
-              placeholder="Search restaurants..."
-              placeholderTextColor={Colors.textTertiary}
-              style={{
-                flex: 1,
-                paddingVertical: 12,
-                paddingHorizontal: 12,
-                fontSize: 16,
-                color: Colors.text,
-              }}
-            />
-          </View>
-
-          <ScrollView 
-            horizontal 
-            showsHorizontalScrollIndicator={false}
-            style={{ marginBottom: 20 }}
-          >
-            {filters.map((filter) => (
-              <FilterButton
-                key={filter}
-                label={filter}
-                isActive={activeFilter === filter.toLowerCase()}
-                onPress={() => setActiveFilter(filter.toLowerCase())}
-              />
-            ))}
-          </ScrollView>
-
-          <Text style={[globalStyles.subtitle, { marginBottom: 16 }]}>
-            Recommended for You
-          </Text>
-
-          {recommendations.map(restaurant => (
-            <RestaurantCard key={restaurant.id} {...restaurant} />
-          ))}
+    <SafeAreaView style={globalStyles.safeArea}>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.screenTitle}>Choose your dining experience</Text>
         </View>
-      </ScrollView>
+        
+        <View style={styles.cardsContainer}>
+          <RecommendationCard
+            title="Solo Dining"
+            description="Personalized recommendations just for you based on your preferences"
+            icon="person"
+            iconType="ionicons"
+            onPress={handleSoloPress}
+            gradient={Colors.primary}
+          />
+          
+          <RecommendationCard
+            title="Group Dining"
+            description="Find the perfect order that satisfies everyone's tastes"
+            icon="account-group"
+            iconType="material"
+            onPress={handleGroupPress}
+            gradient={Colors.secondary}
+          />
+        </View>
+      </View>
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingHorizontal: 20,
+  },
+  header: {
+    marginTop: 10,
+    marginBottom: 30,
+    alignItems: 'center',
+  },
+  screenTitle: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: Colors.text,
+    textAlign: 'center',
+  },
+  cardsContainer: {
+    flex: 1,
+    alignItems: 'center',
+    paddingTop: 20,
+  },
+  card: {
+    width: CARD_WIDTH,
+    height: CARD_HEIGHT,
+    borderRadius: 20,
+    marginVertical: 12,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 8,
+  },
+  cardContent: {
+    flex: 1,
+    padding: 20,
+    borderRadius: 20,
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 12,
+  },
+  iconContainer: {
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    padding: 12,
+    borderRadius: 12,
+  },
+  arrowContainer: {
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textContainer: {
+    flex: 1,
+  },
+  cardTitle: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: Colors.white,
+    marginBottom: 6,
+  },
+  cardDescription: {
+    fontSize: 15,
+    color: 'rgba(255, 255, 255, 0.9)',
+    lineHeight: 22,
+  },
+});

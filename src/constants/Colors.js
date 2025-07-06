@@ -5,6 +5,7 @@ export default {
   primary: '#8B0000',
   primaryLight: '#A52A2A',
   primaryDark: '#5C0000',
+  secondary: '#4A4A4A',
   text: '#FFFFFF',
   textSecondary: '#B3B3B3',
   textTertiary: '#808080',
@@ -14,4 +15,5 @@ export default {
   error: '#EF5350',
   tabBarActive: '#8B0000',
   tabBarInactive: '#666666',
+  white: '#FFFFFF',
 };
