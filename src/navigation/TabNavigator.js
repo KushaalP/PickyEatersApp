@@ -6,7 +6,7 @@ import Colors from '../constants/Colors';
 
 import GameScreen from '../screens/GameScreen';
 import SocialFeedScreen from '../screens/SocialFeedScreen';
-import RecommendationsScreen from '../screens/RecommendationsScreen';
+import RecommendationsNavigator from './RecommendationsNavigator';
 import ProfileScreen from '../screens/ProfileScreen';
 
 const Tab = createBottomTabNavigator();
@@ -61,13 +61,13 @@ export default function TabNavigator() {
       />
       <Tab.Screen 
         name="Recommendations" 
-        component={RecommendationsScreen}
+        component={RecommendationsNavigator}
         options={{
-          tabBarLabel: 'Discover',
+          tabBarLabel: 'For You',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="compass" size={size} color={color} />
+            <Ionicons name="restaurant" size={size} color={color} />
           ),
-          headerTitle: 'Recommendations',
+          headerShown: false,
         }}
       />
       <Tab.Screen 
